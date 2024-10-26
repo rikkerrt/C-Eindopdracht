@@ -30,6 +30,8 @@ namespace ClientWinForm {
             this.clientBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.textBox = new System.Windows.Forms.TextBox();
             this.activeConnections = new System.Windows.Forms.ListBox();
+            this.messageBox = new System.Windows.Forms.ListBox();
+            this.sendButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.clientBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -39,10 +41,10 @@ namespace ClientWinForm {
             // 
             // textBox
             // 
-            this.textBox.Location = new System.Drawing.Point(226, 426);
+            this.textBox.Location = new System.Drawing.Point(226, 422);
             this.textBox.Margin = new System.Windows.Forms.Padding(2);
             this.textBox.Name = "textBox";
-            this.textBox.Size = new System.Drawing.Size(431, 20);
+            this.textBox.Size = new System.Drawing.Size(323, 20);
             this.textBox.TabIndex = 1;
             this.textBox.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
@@ -55,11 +57,31 @@ namespace ClientWinForm {
             this.activeConnections.Size = new System.Drawing.Size(210, 446);
             this.activeConnections.TabIndex = 0;
             // 
+            // messageBox
+            // 
+            this.messageBox.FormattingEnabled = true;
+            this.messageBox.Location = new System.Drawing.Point(226, 0);
+            this.messageBox.Name = "messageBox";
+            this.messageBox.Size = new System.Drawing.Size(427, 420);
+            this.messageBox.TabIndex = 2;
+            // 
+            // sendButton
+            // 
+            this.sendButton.Location = new System.Drawing.Point(562, 422);
+            this.sendButton.Name = "sendButton";
+            this.sendButton.Size = new System.Drawing.Size(91, 23);
+            this.sendButton.TabIndex = 3;
+            this.sendButton.Text = "Send";
+            this.sendButton.UseVisualStyleBackColor = true;
+            this.sendButton.Click += new System.EventHandler(sendButtonClick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(657, 444);
+            this.ClientSize = new System.Drawing.Size(657, 450);
+            this.Controls.Add(this.sendButton);
+            this.Controls.Add(this.messageBox);
             this.Controls.Add(this.textBox);
             this.Controls.Add(this.activeConnections);
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -77,6 +99,8 @@ namespace ClientWinForm {
         private System.Windows.Forms.ListBox activeConnections;
         private System.Windows.Forms.ListBox chatWindow;
         private System.Windows.Forms.BindingSource clientBindingSource;
+        private System.Windows.Forms.ListBox messageBox;
+        private System.Windows.Forms.Button sendButton;
     }
 }
 
