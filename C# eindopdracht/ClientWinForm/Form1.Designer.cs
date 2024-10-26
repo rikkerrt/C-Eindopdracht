@@ -50,7 +50,7 @@ namespace ClientWinForm {
             // 
             this.activeConnections.Items.AddRange(new object[] {
             "Active connections in this session:"});
-            this.activeConnections.Location = new System.Drawing.Point(0, 0);
+            this.activeConnections.Location = new System.Drawing.Point(11, 0);
             this.activeConnections.Name = "activeConnections";
             this.activeConnections.Size = new System.Drawing.Size(210, 446);
             this.activeConnections.TabIndex = 0;
@@ -66,7 +66,7 @@ namespace ClientWinForm {
             this.Name = "Form1";
             this.Text = "Chat client";
             ((System.ComponentModel.ISupportInitialize)(this.clientBindingSource)).EndInit();
-            this.ResumeLayout(true);
+            this.ResumeLayout(false);
             this.PerformLayout();
 
         }
