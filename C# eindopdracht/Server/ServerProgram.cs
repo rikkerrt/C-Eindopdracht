@@ -114,10 +114,11 @@ namespace server {
         internal class Log {
             private readonly string fileName = "C:\\Temp\\serverLog.txt";
             private string message { get; set; }
+            private StreamWriter writer;
 
            public Log () {
                 if (!File.Exists(fileName)) {
-                    using StreamWriter writer = new StreamWriter(fileName);
+                    using StreamWriter writer = new StreamWriter(fileName,true);
                 }
             }
 
@@ -128,24 +129,21 @@ namespace server {
             }
 
             public void writeConnect(string data) {
-                StreamWriter writer = new StreamWriter(fileName, true);
-
+                writer = new StreamWriter(fileName, true);
                 writer.WriteLine(DateTime.Now + "| User connected to server: " + data);
                 writer.Flush();
                 writer.Close();
             }
 
             public void writeDisconnect(string data) {
-                StreamWriter writer = new StreamWriter(fileName, true);
-
+                writer = new StreamWriter(fileName, true);
                 writer.WriteLine(DateTime.Now + "| User disconnected from server: " + data);
                 writer.Flush();
                 writer.Close();
             }
 
             public void writeMessage(string data) {
-                StreamWriter writer = new StreamWriter(fileName, true);
-
+                writer = new StreamWriter(fileName, true);
                 writer.WriteLine(DateTime.Now + "| User send message: " + data);
                 writer.Flush();
                 writer.Close();
