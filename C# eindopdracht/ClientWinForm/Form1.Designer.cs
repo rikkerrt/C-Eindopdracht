@@ -41,7 +41,7 @@ namespace ClientWinForm {
             // 
             // textBox
             // 
-            this.textBox.Location = new System.Drawing.Point(226, 422);
+            this.textBox.Location = new System.Drawing.Point(226, 426);
             this.textBox.Margin = new System.Windows.Forms.Padding(2);
             this.textBox.Name = "textBox";
             this.textBox.Size = new System.Drawing.Size(323, 20);
@@ -67,19 +67,19 @@ namespace ClientWinForm {
             // 
             // sendButton
             // 
-            this.sendButton.Location = new System.Drawing.Point(562, 422);
+            this.sendButton.Location = new System.Drawing.Point(562, 426);
             this.sendButton.Name = "sendButton";
             this.sendButton.Size = new System.Drawing.Size(91, 23);
             this.sendButton.TabIndex = 3;
             this.sendButton.Text = "Send";
             this.sendButton.UseVisualStyleBackColor = true;
-            this.sendButton.Click += new System.EventHandler(sendButtonClick);
+            this.sendButton.Click += new System.EventHandler(this.sendButtonClick);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(657, 450);
+            this.ClientSize = new System.Drawing.Size(657, 452);
             this.Controls.Add(this.sendButton);
             this.Controls.Add(this.messageBox);
             this.Controls.Add(this.textBox);
@@ -90,6 +90,10 @@ namespace ClientWinForm {
             ((System.ComponentModel.ISupportInitialize)(this.clientBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
+        }
+
+        private void addToMessageBox(string message) {
 
         }
 
