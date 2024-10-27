@@ -13,7 +13,6 @@ namespace server {
         static void Main(string[] args) {
             IPAddress localhost = IPAddress.Parse("127.0.0.1");
             TcpListener listener = new TcpListener(localhost, 1212);
-            int connetions = 0;
           
 
             listener.Start();
@@ -22,11 +21,6 @@ namespace server {
                 Console.WriteLine("Waiting for Connection");
 
                 TcpClient client = listener.AcceptTcpClient();
-
-                if (client != null) {
-                    connetions++;
-                    Console.WriteLine(connetions);
-                }
 
                 Thread thread = new Thread(ClientHandler);
                 thread.Start(client);
@@ -108,6 +102,7 @@ namespace server {
                         if (recieved.Equals("Disconnect"))
                         {
                             log.writeDisconnect(username);
+                            connections.Remove(this);
                             client.GetStream().Close();
                             client.Close();
                             break;
