@@ -101,10 +101,25 @@ namespace server {
             public async void ReadTextMessage(object obj) {
                 TcpClient client = obj as TcpClient;
                 while (true) {
-                    var stream = new StreamReader(client.GetStream(), Encoding.UTF8);
-                    string recieved = await stream.ReadLineAsync();
-                    Console.WriteLine(recieved);
-                    WriteTextMessageToAll(recieved);
+                    try
+                    {
+                        var stream = new StreamReader(client.GetStream(), Encoding.UTF8);
+                        string recieved = await stream.ReadLineAsync();
+                        if (recieved.Equals("Disconnect"))
+                        {
+                            log.writeDisconnect(username);
+                            client.GetStream().Close();
+                            client.Close();
+                            break;
+                        }
+
+                        Console.WriteLine(recieved);
+                        WriteTextMessageToAll(recieved);
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.ToString();
+                    }
                 }
             }
 
@@ -116,6 +131,7 @@ namespace server {
                     stream.Flush();
                 }                 
             }
+           
         }
 
         internal class Log {

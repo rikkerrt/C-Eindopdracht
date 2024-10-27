@@ -28,8 +28,17 @@ namespace ClientWinForm {
         {
             string userInput = username + ": " + textBox.Text;
             textBox.Clear();
-            Console.WriteLine("tried to send: " + userInput);
             WriteMessage(tcpClient, userInput);
+        }
+        private void disconnectButtonClick(object sender, EventArgs e)
+        {
+            var streamWriter = new StreamWriter(tcpClient.GetStream(),Encoding.ASCII);
+            streamWriter.WriteLine("Disconnect");
+            streamWriter.Flush();
+
+            tcpClient.GetStream().Close();
+            tcpClient.Close();
+            this.Close();
         }
         private void textBox_TextChanged(object sender, EventArgs e)
         {
@@ -51,7 +60,6 @@ namespace ClientWinForm {
                     MessageBox.Show("Username: " + username);
 
                     tcpClient = new TcpClient("localhost", 1212);
-
 
                     var streamWriter = new StreamWriter(tcpClient.GetStream(), Encoding.ASCII);
                     streamWriter.WriteLine(username);
@@ -86,14 +94,15 @@ namespace ClientWinForm {
             var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
 
             while (client.Connected)
-            {
-                string message = await stream.ReadLineAsync();
-
-                if (message != null)
+            {   try 
                 {
-                    messageBox.Items.Add(message);
-                }
+                    string message = await stream.ReadLineAsync();
 
+                    if (message != null)
+                    {
+                        messageBox.Items.Add(message);
+                    }
+                } catch (Exception e) { Console.WriteLine(e); }              
             }
 
         }
