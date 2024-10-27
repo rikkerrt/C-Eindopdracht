@@ -58,7 +58,9 @@ namespace server {
 
             var streamWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
 
-            WriteTextMessageToAll("Server: Client with username: " + username + " has connected.");
+            ServerNotification(username, "connected");
+            log.writeConnect(username);
+            //WriteTextMessageToAll("Server: Client with username: " + username + " has connected.");
 
             bool done = false;
             while (!done) {
@@ -77,7 +79,12 @@ namespace server {
             foreach (Connection conn in connections) {
                 conn.WriteMessage(text);
             }
-        
+        }
+
+        public static void ServerNotification(string notification, string status) {
+            foreach (Connection conn in connections) {
+                conn.WriteMessage("Server|| User with name: " + notification + " has " + status);
+            }
         }
 
         internal class Connection {
