@@ -13,12 +13,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ClientWinForm {
-    public partial class Form1 : Form {
+    public partial class Form1 : Form
+    {
 
         private string username;
         private TcpClient tcpClient;
         private List<string> users = new List<string>();
-        public Form1() {
+        public Form1()
+        {
             InitializeComponent();
         }
 
@@ -28,13 +30,14 @@ namespace ClientWinForm {
             textBox.Clear();
             WriteMessage(tcpClient, userInput);
         }
-        private void textBox_TextChanged(object sender, EventArgs e) 
+        private void textBox_TextChanged(object sender, EventArgs e)
         {
 
             base.OnLoad(e);
         }
-    
-        private void clientBindingSource_CurrentChanged(object sender, EventArgs e) {
+
+        private void clientBindingSource_CurrentChanged(object sender, EventArgs e)
+        {
 
         }
         protected override void OnLoad(EventArgs e)
@@ -45,59 +48,51 @@ namespace ClientWinForm {
                 {
                     username = form.getUsername();
                     MessageBox.Show("Username: " + username);
-                    
-                    tcpClient = new TcpClient("localhost", 1212);
-                    getUsers(tcpClient);
 
-                    var streamWriter = new StreamWriter(tcpClient.GetStream(),Encoding.ASCII);
+                    tcpClient = new TcpClient("localhost", 1212);
+
+
+                    var streamWriter = new StreamWriter(tcpClient.GetStream(), Encoding.ASCII);
                     streamWriter.WriteLine(username);
                     streamWriter.Flush();
 
                     ReadMessage(tcpClient);
                 }
-                 else
+                else
                 {
                     Application.Exit();
                 }
             }
             base.OnLoad(e);
         }
-        private static void setUsername(TcpClient client) {
+        private static void setUsername(TcpClient client)
+        {
             Console.WriteLine("Type your username");
             string message = Console.ReadLine();
 
             WriteMessage(client, message);
         }
-        
-        private void getUsers(TcpClient client)
+
+
+        private static void WriteMessage(TcpClient client, string message)
         {
-            activeConnections.Items.Clear();
-            var stream = new StreamReader(client.GetStream(),Encoding.ASCII);
-            while (!stream.EndOfStream)
-            {
-                string username = stream.ReadLine();
-                users.Add(username);
-            }
-            foreach(string username in users)
-            {
-                activeConnections.Items.Add(username);
-            }
-        }
-        private static void WriteMessage(TcpClient client, string message) {
             var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
 
             stream.WriteLine(message);
             stream.Flush();
         }
 
-        private async void ReadMessage(TcpClient client) {
+        private async void ReadMessage(TcpClient client)
+        {
 
             var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
 
-            while (client.Connected) {
+            while (client.Connected)
+            {
                 string message = await stream.ReadLineAsync();
 
-                if (message != null) {
+                if (message != null)
+                {
                     messageBox.Items.Add(message);
                 }
 
@@ -105,7 +100,5 @@ namespace ClientWinForm {
 
         }
 
-    }
-
-    
+    }   
 }
