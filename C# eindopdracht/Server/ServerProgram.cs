@@ -31,11 +31,12 @@ namespace server {
         }
 
         private static void logWaiter() {
+            while (true) {
+                string consoleCommand = Console.ReadLine();
 
-            string consoleCommand = Console.ReadLine();
-
-            if (consoleCommand.Equals("log")) {
-                log.ReadLog();
+                if (consoleCommand.Equals("log")) {
+                    log.ReadLog();
+                }
             }
         }
 
