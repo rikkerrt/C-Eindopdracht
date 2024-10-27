@@ -1,4 +1,6 @@
-﻿using System.IO.Pipes;
+﻿using System.Data;
+using System.IO.Enumeration;
+using System.IO.Pipes;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -6,6 +8,7 @@ using System.Text;
 namespace server {
     class Server {
         private static List<Connection> connections = new List<Connection>();
+        private static Log log = new Log();
 
         static void Main(string[] args) {
             IPAddress localhost = IPAddress.Parse("127.0.0.1");
@@ -27,6 +30,18 @@ namespace server {
 
                 Thread thread = new Thread(ClientHandler);
                 thread.Start(client);
+
+                Thread logThread = new Thread(logWaiter);
+                logThread.Start();
+            }
+        }
+
+        private static void logWaiter() {
+
+            string consoleCommand = Console.ReadLine();
+
+            if (consoleCommand.Equals("log")) {
+                log.ReadLog();
             }
         }
 
@@ -42,11 +57,6 @@ namespace server {
             connections.Add(new Connection(client, username));
 
             var streamWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
-            foreach (var connection in connections)
-            {
-                streamWriter.WriteLine(connection.username);
-                streamWriter.Flush();
-            }
 
             WriteTextMessageToAll("Server: Client with username: " + username + " has connected.");
 
@@ -62,6 +72,8 @@ namespace server {
         }
 
         public static void WriteTextMessageToAll(string text) {
+            log.writeMessage(text);
+
             foreach (Connection conn in connections) {
                 conn.WriteMessage(text);
             }
@@ -81,12 +93,12 @@ namespace server {
 
             public async void ReadTextMessage(object obj) {
                 TcpClient client = obj as TcpClient;
-
-                var stream = new StreamReader(client.GetStream(), Encoding.UTF8);
-                string recieved = await stream.ReadLineAsync(); 
-                Console.WriteLine(recieved);  
-                WriteTextMessageToAll(recieved);
-              
+                while (true) {
+                    var stream = new StreamReader(client.GetStream(), Encoding.UTF8);
+                    string recieved = await stream.ReadLineAsync();
+                    Console.WriteLine(recieved);
+                    WriteTextMessageToAll(recieved);
+                }
             }
 
             public void WriteMessage(string message) {
@@ -97,6 +109,49 @@ namespace server {
                     stream.Flush();
                 }                 
             }
+        }
+
+        internal class Log {
+            private readonly string fileName = "C:\\Temp\\serverLog.txt";
+            private string message { get; set; }
+
+           public Log () {
+                if (!File.Exists(fileName)) {
+                    using StreamWriter writer = new StreamWriter(fileName);
+                }
+            }
+
+            public void ReadLog() {
+                StreamReader reader = new StreamReader(fileName, Encoding.ASCII);
+                Console.WriteLine(reader.ReadToEnd());
+                reader.Close();
+            }
+
+            public void writeConnect(string data) {
+                StreamWriter writer = new StreamWriter(fileName, true);
+
+                writer.WriteLine(DateTime.Now + "| User connected to server: " + data);
+                writer.Flush();
+                writer.Close();
+            }
+
+            public void writeDisconnect(string data) {
+                StreamWriter writer = new StreamWriter(fileName, true);
+
+                writer.WriteLine(DateTime.Now + "| User disconnected from server: " + data);
+                writer.Flush();
+                writer.Close();
+            }
+
+            public void writeMessage(string data) {
+                StreamWriter writer = new StreamWriter(fileName, true);
+
+                writer.WriteLine(DateTime.Now + "| User send message: " + data);
+                writer.Flush();
+                writer.Close();
+            }
+
+            
         }
     }
 }

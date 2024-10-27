@@ -28,6 +28,7 @@ namespace ClientWinForm {
         {
             string userInput = username + ": " + textBox.Text;
             textBox.Clear();
+            Console.WriteLine("tried to send: " + userInput);
             WriteMessage(tcpClient, userInput);
         }
         private void textBox_TextChanged(object sender, EventArgs e)
@@ -74,17 +75,14 @@ namespace ClientWinForm {
         }
 
 
-        private static void WriteMessage(TcpClient client, string message)
-        {
+        private static void WriteMessage(TcpClient client, string message) {
             var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
 
             stream.WriteLine(message);
             stream.Flush();
         }
 
-        private async void ReadMessage(TcpClient client)
-        {
-
+        private async void ReadMessage(TcpClient client) {
             var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
 
             while (client.Connected)
