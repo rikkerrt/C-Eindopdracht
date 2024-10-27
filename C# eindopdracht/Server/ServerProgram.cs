@@ -36,12 +36,19 @@ namespace server {
             var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
             string username = "";
 
-            while (username == null) {
+            while (username.Equals("")) {
                 username = stream.ReadLine();
             }
-
             connections.Add(new Connection(client, username));
-            WriteTextMessageToAll(" Server: Client with username: " + username + " has connected.");
+
+            var streamWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
+            foreach (var connection in connections)
+            {
+                streamWriter.WriteLine(connection.username);
+                streamWriter.Flush();
+            }
+
+            WriteTextMessageToAll("Server: Client with username: " + username + " has connected.");
 
             bool done = false;
             while (!done) {
@@ -62,7 +69,7 @@ namespace server {
         }
 
         internal class Connection {
-            private string username { get; set; }
+            public string username { get; set; }
             private TcpClient client { get; set; }
             public Connection(TcpClient client, string username) {
                 this.client = client;
@@ -76,21 +83,19 @@ namespace server {
                 TcpClient client = obj as TcpClient;
 
                 var stream = new StreamReader(client.GetStream(), Encoding.UTF8);
-
-                string recieved = await stream.ReadLineAsync();
-                Console.WriteLine(recieved);
+                string recieved = await stream.ReadLineAsync(); 
+                Console.WriteLine(recieved);  
                 WriteTextMessageToAll(recieved);
-                
-                    
-                
+              
             }
 
             public void WriteMessage(string message) {
                 var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
+         
                 {
                     stream.WriteLine(message);
                     stream.Flush();
-                }
+                }                 
             }
         }
     }

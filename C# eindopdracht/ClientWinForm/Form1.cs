@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -16,6 +17,7 @@ namespace ClientWinForm {
 
         private string username;
         private TcpClient tcpClient;
+        private List<string> users = new List<string>();
         public Form1() {
             InitializeComponent();
         }
@@ -43,13 +45,15 @@ namespace ClientWinForm {
                 {
                     username = form.getUsername();
                     MessageBox.Show("Username: " + username);
-                    activeConnections.Items.Add(username);
-
-                     tcpClient = new TcpClient("localhost", 1212);
                     
+                    tcpClient = new TcpClient("localhost", 1212);
+                    getUsers(tcpClient);
 
-                    Thread threat = new Thread(ReadMessage);
-                    threat.Start(tcpClient);
+                    var streamWriter = new StreamWriter(tcpClient.GetStream(),Encoding.ASCII);
+                    streamWriter.WriteLine(username);
+                    streamWriter.Flush();
+
+                    ReadMessage(tcpClient);
                 }
                  else
                 {
@@ -64,7 +68,21 @@ namespace ClientWinForm {
 
             WriteMessage(client, message);
         }
-
+        
+        private void getUsers(TcpClient client)
+        {
+            activeConnections.Items.Clear();
+            var stream = new StreamReader(client.GetStream(),Encoding.ASCII);
+            while (!stream.EndOfStream)
+            {
+                string username = stream.ReadLine();
+                users.Add(username);
+            }
+            foreach(string username in users)
+            {
+                activeConnections.Items.Add(username);
+            }
+        }
         private static void WriteMessage(TcpClient client, string message) {
             var stream = new StreamWriter(client.GetStream(), Encoding.ASCII);
 
@@ -72,19 +90,17 @@ namespace ClientWinForm {
             stream.Flush();
         }
 
-        private void ReadMessage(object obj) {
-            TcpClient client = obj as TcpClient;
+        private async void ReadMessage(TcpClient client) {
 
             var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
 
-            while (true) {
-                string message = stream.ReadLine();
+            while (client.Connected) {
+                string message = await stream.ReadLineAsync();
 
                 if (message != null) {
                     messageBox.Items.Add(message);
                 }
 
-                Thread.Sleep(100);
             }
 
         }
