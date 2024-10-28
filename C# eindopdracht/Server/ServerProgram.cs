@@ -6,8 +6,8 @@ using System.Net.Sockets;
 using System.Text;
 
 namespace server {
-    class Server {
-        private static List<Connection> connections = new List<Connection>();
+    public class Server {
+        public static List<Connection> connections = new List<Connection>();
         private static Log log = new Log();
 
         static void Main(string[] args) {
@@ -19,6 +19,7 @@ namespace server {
 
             while (true) {
                 Console.WriteLine("Waiting for Connection");
+                Console.WriteLine(connections.Count);
 
                 TcpClient client = listener.AcceptTcpClient();
 
@@ -82,7 +83,7 @@ namespace server {
             }
         }
 
-        internal class Connection {
+        public class Connection {
             public string username { get; set; }
             private TcpClient client { get; set; }
             public Connection(TcpClient client, string username) {
@@ -130,7 +131,7 @@ namespace server {
            
         }
 
-        internal class Log {
+        public class Log {
             private readonly string fileName = "C:\\Temp\\serverLog.txt";
             private string message { get; set; }
             private StreamWriter writer;
@@ -141,10 +142,13 @@ namespace server {
                 }
             }
 
-            public void ReadLog() {
+            public string ReadLog() {
+                
                 StreamReader reader = new StreamReader(fileName, Encoding.ASCII);
-                Console.WriteLine(reader.ReadToEnd());
+                string readerRead = reader.ReadToEnd();
+                Console.WriteLine(readerRead);
                 reader.Close();
+                return readerRead;
             }
 
             public void writeConnect(string data) {
