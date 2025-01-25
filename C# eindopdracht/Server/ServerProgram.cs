@@ -10,7 +10,7 @@ namespace server {
         public static List<Connection> connections = new List<Connection>();
         private static Log log = new Log();
 
-        static void Main(string[] args) {
+        public static void Main(string[] args) {
             IPAddress localhost = IPAddress.Parse("127.0.0.1");
             TcpListener listener = new TcpListener(localhost, 1212);
           
@@ -151,6 +151,14 @@ namespace server {
                 return readerRead;
             }
 
+            public string  ReadLastLine()
+            {
+                StreamReader reader = new StreamReader(fileName, Encoding.ASCII);
+                string readerRead = File.ReadAllLines(fileName).Last();
+                reader.Close();
+                return readerRead;
+            }
+
             public void writeConnect(string data) {
                 writer = new StreamWriter(fileName, true);
                 writer.WriteLine(DateTime.Now + "| User connected to server: " + data);
@@ -167,7 +175,7 @@ namespace server {
 
             public void writeMessage(string data) {
                 writer = new StreamWriter(fileName, true);
-                writer.WriteLine(DateTime.Now + "| User send message: " + data);
+                writer.Write("\n"+ DateTime.Now + "| User send message: " + data);
                 writer.Flush();
                 writer.Close();
             }
