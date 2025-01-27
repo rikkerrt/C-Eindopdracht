@@ -30,6 +30,27 @@ namespace server.Tests
         {
             Main(new string[0]);
         }
-        
+
+        [TestMethod()]
+        public void AddUsernamesToCheckForRegex()
+        {
+            Thread thread = new Thread(startServer);
+            thread.Start();
+
+            TcpClient tcpClient = new TcpClient("localhost",1212);
+
+            List<string> users = new List<string>();
+            users.Add("Collin");
+            users.Add("collin");
+            users.Add("c0llin");
+            users.Add("C0llin");
+
+            foreach (string user in users)
+            {
+                var connection = new Connection(tcpClient, user);
+                connections.Add(connection);
+            }
+            Assert.IsTrue(connections.Count == 1);
+        }
     }
 }

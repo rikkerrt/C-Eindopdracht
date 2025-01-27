@@ -4,6 +4,7 @@ using System.IO.Pipes;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace server {
     public class Server {
@@ -46,11 +47,20 @@ namespace server {
 
             var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
             string username = "";
+            string regex = @"^[A-Z][a-z]+$";
 
             while (username.Equals("")) {
                 username = stream.ReadLine();
+                if (Regex.IsMatch(username, regex))
+                {
+                    connections.Add(new Connection(client, username));
+                }
+                else
+                {
+                    username = "";
+                }
             }
-            connections.Add(new Connection(client, username));
+            
 
             var streamWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
 
