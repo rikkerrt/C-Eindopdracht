@@ -19,7 +19,7 @@ namespace server {
 
             while (true) {
                 Console.WriteLine("Waiting for Connection");
-                Console.WriteLine(connections.Count);
+ //               Console.WriteLine(connections.Count);
 
                 TcpClient client = listener.AcceptTcpClient();
 

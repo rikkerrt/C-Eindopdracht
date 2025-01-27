@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,6 +18,7 @@ namespace ClientWinForm {
     {
 
         private string username;
+        private string regex = @"^[A-Z][a-z]+$";
         private TcpClient tcpClient;
         private List<string> users = new List<string>();
         public Form1()
@@ -57,15 +59,23 @@ namespace ClientWinForm {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     username = form.getUsername();
-                    MessageBox.Show("Username: " + username);
+                    if (Regex.IsMatch(username, regex))
+                    {
+                        MessageBox.Show("Username: " + username);
 
-                    tcpClient = new TcpClient("localhost", 1212);
+                        tcpClient = new TcpClient("localhost", 1212);
 
-                    var streamWriter = new StreamWriter(tcpClient.GetStream(), Encoding.ASCII);
-                    streamWriter.WriteLine(username);
-                    streamWriter.Flush();
+                        var streamWriter = new StreamWriter(tcpClient.GetStream(), Encoding.ASCII);
+                        streamWriter.WriteLine(username);
+                        streamWriter.Flush();
 
-                    ReadMessage(tcpClient);
+                        ReadMessage(tcpClient);
+                    } else
+                    {
+
+                        this.OnLoad(e);
+                    }
+                    
                 }
                 else
                 {
